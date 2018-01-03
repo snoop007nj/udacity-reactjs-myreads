@@ -1,5 +1,6 @@
 import React, { Component } from "react";
 import BookShelf from "./BookShelf";
+import { Link } from 'react-router-dom';
 
 class ListBooks extends Component {
 
@@ -23,22 +24,22 @@ class ListBooks extends Component {
           <BookShelf
             bookshelfTitle="Currently Reading"
             books={currentlyReading}
-            onChangeShelf={this.props.onChangeShelf}
+            handleChangeShelf={this.props.handleChangeShelf}
           />
           <BookShelf
             bookshelfTitle="Want to Read"
             books={wantToRead}
-            onChangeShelf={this.props.onChangeShelf}
+            handleChangeShelf={this.props.handleChangeShelf}
           />
           <BookShelf
             bookshelfTitle="Read"
             books={read}
-            onChangeShelf={this.props.onChangeShelf}
+            handleChangeShelf={this.props.handleChangeShelf}
           />
         </div>
-        {/*<div className="open-search">
+        <div className="open-search">
           <Link to="/search">Add a book</Link>
-        </div>*/}
+        </div>
       </div>
     )
   }
