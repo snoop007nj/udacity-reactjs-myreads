@@ -16,6 +16,7 @@ class BooksApp extends React.Component {
      */
     showSearchPage: false,
     books: [],
+    searchResults: [],
     searchValue: ''
   }
 
@@ -32,11 +33,11 @@ class BooksApp extends React.Component {
   }
 
   //handle changes to shelf
-  handleChangeShelf = (bookId, event) => {
-    console.log("this.state:", this.state)
+  handleChangeShelf = (book, event) => {
+    console.log("App.handleChangeShelf this.state:", this.state)
     //Find the book that needs to be moved
-    const book = this.state.books.filter(book => book.id === bookId)[0];
-    console.log("book to move:", book)
+    //const book = this.state.books.filter(book => book.id === bookId)[0];
+    //console.log("App.handleChangeShelf book to move:", book)
 
     //Update DB - Move the book to the new shelf
     const newShelf = event.target.value
@@ -55,6 +56,40 @@ class BooksApp extends React.Component {
     this.setState({
       searchValue: event.target.value
     });
+
+    console.log("this.state.searchValue:", this.state.searchValue)
+
+    BooksAPI.search(event.target.value.trim(), 1).then((response) => {
+      const searchBooks = response;
+      console.log("searchBooks:", searchBooks);
+
+      if (!response || response.error || this.state.searchValue.length < 1) {
+          this.setState({
+            ...this.state,
+            searchResults: []
+          });
+      } else {
+        this.state.books.forEach(shelfBook => {
+          searchBooks.forEach(searchBook => {
+            //console.log("shelfBook.id:", shelfBook.id, ",shelfBook.shelf:", shelfBook.shelf, ",searchBook.id:", searchBook.id, ",searchBook.shelf:", searchBook.shelf);
+            if (!searchBook.shelf) {
+                searchBook.shelf = 'none';
+            }
+
+            if (shelfBook.id === searchBook.id) {
+              searchBook.shelf = shelfBook.shelf;
+              console.log("this.state.searchValue:", this.state.searchValue, ", shelfBook.id:", shelfBook.id, ",shelfBook.shelf:", shelfBook.shelf, ",searchBook.id:", searchBook.id, ",searchBook.shelf:", searchBook.shelf);
+            }
+          })
+        });
+
+        this.setState({
+          ...this.state,
+          searchResults: searchBooks
+        });
+      }
+    })
+      .catch(console.error);
   };
 
   render() {
@@ -62,6 +97,8 @@ class BooksApp extends React.Component {
     console.log("App this.state.books:", this.state.books)
 
     console.log("App this.state.searchValue:", this.state.searchValue)
+
+    console.log("App this.state.searchResults:", this.state.searchResults)
 
     return (
       <div className="app">
@@ -76,9 +113,10 @@ class BooksApp extends React.Component {
         <Route path="/search" exact
           render={() => (
             <Search
-              books={this.state.books}
+              books={this.state.searchResults}
               searchValue={this.state.searchValue}
               updateSearch={this.updateSearch}
+              handleChangeShelf={this.handleChangeShelf}
             />
           )}
         />
