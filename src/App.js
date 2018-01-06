@@ -8,13 +8,6 @@ import "./App.css";
 
 class BooksApp extends React.Component {
   state = {
-    /**
-     * TODO: Instead of using this state variable to keep track of which page
-     * we're on, use the URL in the browser's address bar. This will ensure that
-     * users can use the browser's back and forward buttons to navigate between
-     * pages, as well as provide a good URL they can bookmark and share.
-     */
-    showSearchPage: false,
     books: [],
     searchResults: [],
     searchValue: ''
@@ -35,9 +28,6 @@ class BooksApp extends React.Component {
   //handle changes to shelf
   handleChangeShelf = (book, event) => {
     console.log("App.handleChangeShelf this.state:", this.state)
-    //Find the book that needs to be moved
-    //const book = this.state.books.filter(book => book.id === bookId)[0];
-    //console.log("App.handleChangeShelf book to move:", book)
 
     //Update DB - Move the book to the new shelf
     const newShelf = event.target.value
