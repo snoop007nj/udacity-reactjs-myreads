@@ -29,27 +29,26 @@ class BooksApp extends React.Component {
   handleChangeShelf = (book, event) => {
     console.log("App.handleChangeShelf this.state:", this.state)
 
-    //Update DB - Move the book to the new shelf
     const newShelf = event.target.value
     BooksAPI.update(book, newShelf).then(() => {
-      BooksAPI.getAll().then((data) => {
+      console.log("App.handleChangeShelf book.title:", book.title, ", book.shelf:", book.shelf, ", newShelf:", newShelf)
 
-        //re-render view
-        this.setState({
-          books: data
-        });
-      });
+      book.shelf = newShelf
+
+      this.setState(state => ({
+        books: state.books.filter(b => b.id !== book.id).concat([book])
+      }))
     });
   };
 
-  updateSearch = (event) => {
+  updateSearch = (eventSearchValue) => {
     this.setState({
-      searchValue: event.target.value
+      searchValue: eventSearchValue
     });
 
     console.log("this.state.searchValue:", this.state.searchValue)
 
-    BooksAPI.search(event.target.value.trim(), 1).then((response) => {
+    BooksAPI.search(this.state.searchValue.trim(), 1).then((response) => {
       const searchBooks = response;
       console.log("searchBooks:", searchBooks);
 
@@ -103,7 +102,8 @@ class BooksApp extends React.Component {
         <Route path="/search" exact
           render={() => (
             <Search
-              books={this.state.searchResults}
+              books={this.state.books}
+              searchResults={this.state.searchResults}
               searchValue={this.state.searchValue}
               updateSearch={this.updateSearch}
               handleChangeShelf={this.handleChangeShelf}
