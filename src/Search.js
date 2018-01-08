@@ -5,20 +5,20 @@ import Book from './Book';
 
 class Search extends Component {
 
-  state = {
-    books: [],
-    searchResults: [],
-    searchValue: ''
-  }
-
-  componentWillReceiveProps = (books) => {
-    console.log("Search.componentWillReceiveProps books:", books)
-  }
+  // state = {
+  //   books: [],
+  //   searchResults: [],
+  //   searchValue: ''
+  // }
+  //
+  // componentWillReceiveProps = (books) => {
+  //   console.log("Search.componentWillReceiveProps books:", books)
+  // }
 
   render() {
 
-    console.log("Search this.state.books:", this.state.books)
-    console.log("Search this.props.searchResults:", this.props.searchResults)
+    // console.log("Search this.state.books:", this.state.books)
+    // console.log("Search this.props.searchResults:", this.props.searchResults)
 
     return (
       <div className="search-books">
