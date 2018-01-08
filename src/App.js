@@ -48,37 +48,40 @@ class BooksApp extends React.Component {
 
     console.log("this.state.searchValue:", this.state.searchValue)
 
-    BooksAPI.search(this.state.searchValue.trim(), 1).then((response) => {
-      const searchBooks = response;
-      console.log("searchBooks:", searchBooks);
+    if (this.state.searchValue >0 ) {
+      BooksAPI.search(this.state.searchValue.trim(), 1).then((response) => {
+        const searchBooks = response;
+        console.log("searchBooks:", searchBooks);
 
-      if (!response || response.error || this.state.searchValue.length < 1) {
+        if (!response || response.error || this.state.searchValue.length < 1) {
+            this.setState({
+              ...this.state,
+              searchResults: []
+            });
+        } else {
+          this.state.books.forEach(shelfBook => {
+            searchBooks.forEach(searchBook => {
+              //console.log("shelfBook.id:", shelfBook.id, ",shelfBook.shelf:", shelfBook.shelf, ",searchBook.id:", searchBook.id, ",searchBook.shelf:", searchBook.shelf);
+              if (!searchBook.shelf) {
+                  searchBook.shelf = 'none';
+              }
+
+              if (shelfBook.id === searchBook.id) {
+                searchBook.shelf = shelfBook.shelf;
+                console.log("this.state.searchValue:", this.state.searchValue, ", shelfBook.id:", shelfBook.id, ",shelfBook.shelf:", shelfBook.shelf, ",searchBook.id:", searchBook.id, ",searchBook.shelf:", searchBook.shelf);
+              }
+            })
+          });
+
           this.setState({
             ...this.state,
-            searchResults: []
+            searchResults: searchBooks
           });
-      } else {
-        this.state.books.forEach(shelfBook => {
-          searchBooks.forEach(searchBook => {
-            //console.log("shelfBook.id:", shelfBook.id, ",shelfBook.shelf:", shelfBook.shelf, ",searchBook.id:", searchBook.id, ",searchBook.shelf:", searchBook.shelf);
-            if (!searchBook.shelf) {
-                searchBook.shelf = 'none';
-            }
+        }
+      })
+        .catch(console.error);
+    }
 
-            if (shelfBook.id === searchBook.id) {
-              searchBook.shelf = shelfBook.shelf;
-              console.log("this.state.searchValue:", this.state.searchValue, ", shelfBook.id:", shelfBook.id, ",shelfBook.shelf:", shelfBook.shelf, ",searchBook.id:", searchBook.id, ",searchBook.shelf:", searchBook.shelf);
-            }
-          })
-        });
-
-        this.setState({
-          ...this.state,
-          searchResults: searchBooks
-        });
-      }
-    })
-      .catch(console.error);
   };
 
   render() {
