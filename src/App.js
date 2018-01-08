@@ -48,10 +48,10 @@ class BooksApp extends React.Component {
 
     console.log("this.state.searchValue:", this.state.searchValue)
 
-    if (this.state.searchValue >0 ) {
-      BooksAPI.search(this.state.searchValue.trim(), 1).then((response) => {
+    if (this.state.searchValue) {
+      BooksAPI.search(this.state.searchValue.trim(), 20).then((response) => {
         const searchBooks = response;
-        console.log("searchBooks:", searchBooks);
+        console.log("App.updateSearch searchBooks:", searchBooks)
 
         if (!response || response.error || this.state.searchValue.length < 1) {
             this.setState({
